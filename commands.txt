@@ -1,0 +1,4 @@
+Pig commands:
+
+export JAVA_HOME=/Library/InternetPlug-Ins/JavaAppletPlugin.plugin/Contents/Home/bin/java
+export PATH=/usr/local/Cellar/pig-0.16.0/bin:$PATH
