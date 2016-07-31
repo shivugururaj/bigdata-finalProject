@@ -76,3 +76,6 @@ hdfs dfs -copyToLocal <hadoop path> <local path>
 To view contents of hadoop file:
 hdfs dfs -cat <path of hadoop file>
 
+To remove namenode from safemode:
+hadoop dfsadmin -safemode leave
+
