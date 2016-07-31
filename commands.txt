@@ -61,3 +61,18 @@ productTable::NombreProducto;
 res = limit output2 5000;
 
 store res into 'resultFile2'
+
+
+--------------------------------------------
+
+Useful hadoop commands:
+
+To copy file to hadoop:
+hdfs dfs -copyFromLocal <local path> <hdfs path>
+
+To copy file from hadoop to local:
+hdfs dfs -copyToLocal <hadoop path> <local path>
+
+To view contents of hadoop file:
+hdfs dfs -cat <path of hadoop file>
+
