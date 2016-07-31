@@ -2,3 +2,62 @@ Pig commands:
 
 export JAVA_HOME=/Library/InternetPlug-Ins/JavaAppletPlugin.plugin/Contents/Home/bin/java
 export PATH=/usr/local/Cellar/pig-0.16.0/bin:$PATH
+
+——————
+pre process data commands
+
+load csv file to pig:
+
+trainData = LOAD '/Users/deepthaparsidiwakar/Documents/Big Data/Project/train2.csv' USING PigStorage(',') as
+(Semana,Agencia_ID,Canal_ID,Ruta_SAK,Cliente_ID,Producto_ID,Venta_uni_hoy,Venta_hoy,Dev_uni_proxima,Dev_proxima,Demanda_uni_equil);
+
+clientTable = LOAD '/Users/deepthaparsidiwakar/Documents/Big Data/Project/clientTable.csv' USING PigStorage(',') as (C_ID,NombreCliente);
+
+productTable = LOAD '/Users/deepthaparsidiwakar/Documents/Big Data/Project/product_table.csv' USING PigStorage(',') as (P_ID,NombreProducto);
+
+townState = LOAD '/Users/deepthaparsidiwakar/Documents/Big Data/Project/town_state.csv' USING PigStorage(',') as (A_ID,Town,State);
+
+
+joinClientTable = join trainData by Cliente_ID,clientTable by C_ID;
+
+
+joinProdTable = join joinClientTable by Producto_ID,productTable by P_ID;
+
+res = limit joinProdTable 500;
+
+---------------
+to run on  hdfs 
+
+trainData = LOAD 'train2.csv' USING PigStorage(',') as
+(Semana,Agencia_ID,Canal_ID,Ruta_SAK,Cliente_ID,Producto_ID,Venta_uni_hoy,Venta_hoy,Dev_uni_proxima,Dev_proxima,Demanda_uni_equil);
+
+clientTable = LOAD 'clientTable.csv' USING PigStorage(',') as (C_ID,NombreCliente);
+
+productTable = LOAD 'product_table.csv' USING PigStorage(',') as (P_ID,NombreProducto);
+
+townState = LOAD 'town_state.csv' USING PigStorage(',') as (A_ID,Town,State);
+
+
+joinClientTable = join trainData by Cliente_ID,clientTable by C_ID;
+
+
+joinProdTable = join joinClientTable by Producto_ID,productTable by P_ID;
+
+finalTable = join joinProdTable by Agencia_ID, townState by A_ID;
+
+output2 = foreach joinProdTable generate Semana,joinClientTable::trainData::Agencia_ID,
+joinClientTable::trainData::Canal_ID,
+joinClientTable::trainData::Ruta_SAK,
+joinClientTable::trainData::Cliente_ID,
+joinClientTable::trainData::Producto_ID,
+joinClientTable::trainData::Venta_uni_hoy,
+//joinClientTable::trainData::Venta_hoy,
+joinClientTable::trainData::Dev_uni_proxima,
+//joinClientTable::trainData::Dev_proxima,
+joinClientTable::trainData::Demanda_uni_equil,
+joinClientTable::clientTable::NombreCliente,
+productTable::NombreProducto;
+
+res = limit output2 5000;
+
+store res into 'resultFile2'
