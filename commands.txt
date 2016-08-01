@@ -72,7 +72,15 @@ joinClientTable::clientTable::NombreCliente: bytearray,
 productTable::NombreProducto: bytearray}
 --------------------------------------------------------------------------------------------------------------
 
-res = limit output2 5000;
+to remove duplicate client id entries from output2 ->
+
+
+clientGroup = GROUP output2 BY Cliente_ID ;
+filtered = FOREACH clientGroup { top_rec = LIMIT output2 1; GENERATE top_rec;};
+
+
+
+res = limit filtered 5000;
 
 store res into 'resultFile2'
 
