@@ -28,7 +28,7 @@ res = limit joinProdTable 500;
 ---------------
 to run on  hdfs 
 
-trainData = LOAD 'train2.csv' USING PigStorage(',') as
+trainData = LOAD 'train.csv' USING PigStorage(',') as
 (Semana,Agencia_ID,Canal_ID,Ruta_SAK,Cliente_ID,Producto_ID,Venta_uni_hoy,Venta_hoy,Dev_uni_proxima,Dev_proxima,Demanda_uni_equil);
 
 clientTable = LOAD 'clientTable.csv' USING PigStorage(',') as (C_ID,NombreCliente);
@@ -51,13 +51,31 @@ joinClientTable::trainData::Ruta_SAK,
 joinClientTable::trainData::Cliente_ID,
 joinClientTable::trainData::Producto_ID,
 joinClientTable::trainData::Venta_uni_hoy,
-//joinClientTable::trainData::Venta_hoy,
 joinClientTable::trainData::Dev_uni_proxima,
-//joinClientTable::trainData::Dev_proxima,
 joinClientTable::trainData::Demanda_uni_equil,
 joinClientTable::clientTable::NombreCliente,
 productTable::NombreProducto;
 
+--------------------------------------------------------------------------------------------------------------
+
+description of output2 is -->
+{joinClientTable::trainData::Semana: bytearray,
+joinClientTable::trainData::Agencia_ID: bytearray,
+joinClientTable::trainData::Canal_ID: bytearray,
+joinClientTable::trainData::Ruta_SAK: bytearray,
+joinClientTable::trainData::Cliente_ID: bytearray,
+joinClientTable::trainData::Producto_ID: bytearray,
+joinClientTable::trainData::Venta_uni_hoy: bytearray,
+joinClientTable::trainData::Dev_uni_proxima: bytearray,
+joinClientTable::trainData::Demanda_uni_equil: bytearray,
+joinClientTable::clientTable::NombreCliente: bytearray,
+productTable::NombreProducto: bytearray}
+--------------------------------------------------------------------------------------------------------------
+
 res = limit output2 5000;
 
 store res into 'resultFile2'
+
+
+
+
