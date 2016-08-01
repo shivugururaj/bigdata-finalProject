@@ -31,7 +31,7 @@ to run on  hdfs
 trainData = LOAD 'train.csv' USING PigStorage(',') as
 (Semana,Agencia_ID,Canal_ID,Ruta_SAK,Cliente_ID,Producto_ID,Venta_uni_hoy,Venta_hoy,Dev_uni_proxima,Dev_proxima,Demanda_uni_equil);
 
-clientTable = LOAD 'clientTable.csv' USING PigStorage(',') as (C_ID,NombreCliente);
+clientTable = LOAD 'client_table.csv' USING PigStorage(',') as (C_ID,NombreCliente);
 
 productTable = LOAD 'product_table.csv' USING PigStorage(',') as (P_ID,NombreProducto);
 
@@ -58,21 +58,10 @@ productTable::NombreProducto;
 
 --------------------------------------------------------------------------------------------------------------
 
-description of output2 is -->
-{joinClientTable::trainData::Semana: bytearray,
-joinClientTable::trainData::Agencia_ID: bytearray,
-joinClientTable::trainData::Canal_ID: bytearray,
-joinClientTable::trainData::Ruta_SAK: bytearray,
-joinClientTable::trainData::Cliente_ID: bytearray,
-joinClientTable::trainData::Producto_ID: bytearray,
-joinClientTable::trainData::Venta_uni_hoy: bytearray,
-joinClientTable::trainData::Dev_uni_proxima: bytearray,
-joinClientTable::trainData::Demanda_uni_equil: bytearray,
-joinClientTable::clientTable::NombreCliente: bytearray,
-productTable::NombreProducto: bytearray}
---------------------------------------------------------------------------------------------------------------
 
-to remove duplicate client id entries from output2 ->
+
+
+//to remove duplicate client id entries from output2 ->
 
 
 clientGroup = GROUP output2 BY Cliente_ID ;
@@ -82,7 +71,7 @@ filtered = FOREACH clientGroup { top_rec = LIMIT output2 1; GENERATE top_rec;};
 
 res = limit filtered 5000;
 
-store res into 'resultFile2'
+store res into 'resultFile2';
 
 
 
